@@ -3,33 +3,35 @@ on: [push]
 
 jobs:
   build:
-  runs-on: ubuntu-latest
-  steps:
+    runs-on: ubuntu-latest
+    steps:  #<--start of build encapsulation
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+      - name: install npm
+        run: npm install
+      - name: install dependencies
+        run: npm ci
+      - name: npm build
+        run: npm run build
+        #<-- end of build job
+      
+  test: #<--start of test encapsulation
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: checkout
       uses: actions/checkout@v4
     - name: node setup
       uses: actions/setup-node@v4
       with:
-        node-version:14
-    -name: install npm
+        node-version: 14
+    - name: install npm
       run: npm install
-    -name: install dependencies
+    - name: install dependencies
       run: npm ci
-    -name: npm build
-      run: npm run build
-      #<-- end of build job
-  test:
-  steps:
-    - name: checkout
-      uses: actions/checkout@v4
-    - name: node setup
-      uses: actions/setup-node@v4
-      with:
-        node-version:14
-      -name: install npm
-      run: npm install
-    -name: install dependencies
-      run: npm ci
-    -name: npm build test
+    - name: npm build test
       run: npm test
-  
